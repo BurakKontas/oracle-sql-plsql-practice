@@ -1,0 +1,502 @@
+[
+  {
+    "title": "1. Tüm müşteri adlarını alfabetik sırayla listeleyin.",
+    "hint": "Customers tablosunu kullanın ve ORDER BY ile sıralayın.",
+    "sql": "SELECT COMPANY_NAME FROM Customers ORDER BY COMPANY_NAME"
+  },
+  {
+    "title": "2. Stokta olmayan ürünleri ve kategori adlarını birlikte gösterin.",
+    "hint": "Products ve Categories tablolarını JOIN edin, WHERE UnitsInStock = 0 koşulunu kullanın.",
+    "sql": "SELECT p.PRODUCT_NAME, c.CATEGORY_NAME FROM Products p JOIN Categories c ON p.CATEGORY_ID = c.CATEGORY_ID WHERE p.UNITS_IN_STOCK = 0"
+  },
+  {
+    "title": "3. Her siparişteki toplam ürün adedini listeleyin.",
+    "hint": "Order Details tablosunda Quantity sütununu SUM ile toplayın, GROUP BY OrderID kullanın.",
+    "sql": "SELECT ORDER_ID, SUM(QUANTITY) AS TotalQuantity FROM [Order Details] GROUP BY ORDER_ID"
+  },
+  {
+    "title": "4. En fazla ürün barındıran siparişi bulun.",
+    "hint": "Order Details'de SUM(Quantity) kullanın, ORDER BY DESC ile sıralayıp LIMIT 1 alın.",
+    "sql": "SELECT TOP 1 ORDER_ID, SUM(QUANTITY) AS TotalQuantity FROM [Order Details] GROUP BY ORDER_ID ORDER BY SUM(QUANTITY) DESC"
+  },
+  {
+    "title": "5. Her kategorinin toplam stok miktarını hesaplayın.",
+    "hint": "Products ve Categories tablolarını JOIN edin, SUM(UnitsInStock) kullanın.",
+    "sql": "SELECT c.CATEGORY_NAME, SUM(p.UNITS_IN_STOCK) AS TotalStock FROM Categories c JOIN Products p ON c.CATEGORY_ID = p.CATEGORY_ID GROUP BY c.CATEGORY_ID, c.CATEGORY_NAME"
+  },
+  {
+    "title": "6. Ürün isimlerinde boşluk geçenleri listeleyin.",
+    "hint": "Products tablosunda ProductName LIKE '% %' koşulunu kullanın.",
+    "sql": "SELECT PRODUCT_NAME FROM Products WHERE PRODUCT_NAME LIKE '% %'"
+  },
+  {
+    "title": "7. Tüm siparişlerin toplam cirosunu hesaplayın.",
+    "hint": "Order Details'de (UnitPrice * Quantity * (1 - Discount)) formülünü kullanın.",
+    "sql": "SELECT SUM(UNIT_PRICE * QUANTITY * (1 - DISCOUNT)) AS TotalRevenue FROM [Order Details]"
+  },
+  {
+    "title": "8. Her siparişte kullanılan farklı ürün sayısını bulun.",
+    "hint": "Order Details'de COUNT(DISTINCT ProductID) kullanın, GROUP BY OrderID.",
+    "sql": "SELECT ORDER_ID, COUNT(DISTINCT PRODUCT_ID) AS UniqueProducts FROM [Order Details] GROUP BY ORDER_ID"
+  },
+  {
+    "title": "9. Her çalışanın toplam sattığı ürün sayısını bulun.",
+    "hint": "Orders ve Order Details tablolarını JOIN edin, SUM(Quantity) kullanın.",
+    "sql": "SELECT e.FIRST_NAME + ' ' + e.LAST_NAME AS EmployeeName, SUM(od.QUANTITY) AS TotalProductsSold FROM Employees e JOIN Orders o ON e.EMPLOYEE_ID = o.EMPLOYEE_ID JOIN [Order Details] od ON o.ORDER_ID = od.ORDER_ID GROUP BY e.EMPLOYEE_ID, e.FIRST_NAME, e.LAST_NAME"
+  },
+  {
+    "title": "10. Aynı şehirdeki tedarikçi ve müşterileri eşleştirin.",
+    "hint": "Suppliers ve Customers tablolarını City üzerinden JOIN edin.",
+    "sql": "SELECT s.COMPANY_NAME AS SupplierName, c.COMPANY_NAME AS CustomerName, s.City FROM Suppliers s JOIN Customers c ON s.City = c.City ORDER BY s.City"
+  },
+  {
+    "title": "11. Her yıl için ortalama sipariş cirosunu hesaplayın.",
+    "hint": "YEAR(OrderDate) fonksiyonunu kullanın, AVG ile ortalama alın.",
+    "sql": "SELECT YEAR(o.ORDER_DATE) AS OrderYear, AVG(od.UNIT_PRICE * od.QUANTITY * (1 - od.DISCOUNT)) AS AvgOrderRevenue FROM Orders o JOIN [Order Details] od ON o.ORDER_ID = od.ORDER_ID GROUP BY YEAR(o.ORDER_DATE)"
+  },
+  {
+    "title": "12. En çok müşteri bulunan 3 ülkeyi bulun.",
+    "hint": "Customers tablosunda GROUP BY Country, COUNT(*) ile sayın, ORDER BY DESC LIMIT 3.",
+    "sql": "SELECT TOP 3 Country, COUNT(*) AS CustomerCount FROM Customers GROUP BY Country ORDER BY COUNT(*) DESC"
+  },
+  {
+    "title": "13. Tedarikçi başına düşen ortalama ürün fiyatını listeleyin.",
+    "hint": "Products tablosunda GROUP BY SupplierID, AVG(UnitPrice) kullanın.",
+    "sql": "SELECT s.COMPANY_NAME, AVG(p.UNIT_PRICE) AS AvgProductPrice FROM Suppliers s JOIN Products p ON s.SUPPLIER_ID = p.SUPPLIER_ID GROUP BY s.SUPPLIER_ID, s.COMPANY_NAME"
+  },
+  {
+    "title": "14. 'a' harfiyle başlayıp 's' harfiyle biten ürünleri listeleyin.",
+    "hint": "ProductName LIKE 'a%s' koşulunu kullanın.",
+    "sql": "SELECT PRODUCT_NAME FROM Products WHERE PRODUCT_NAME LIKE 'a%s'"
+  },
+  {
+    "title": "15. Kategorisi 'Beverages' olan ürünlerin toplam cirosunu hesaplayın.",
+    "hint": "Products, Categories ve Order Details tablolarını JOIN edin.",
+    "sql": "SELECT SUM(od.UNIT_PRICE * od.QUANTITY * (1 - od.DISCOUNT)) AS BeveragesRevenue FROM [Order Details] od JOIN Products p ON od.PRODUCT_ID = p.PRODUCT_ID JOIN Categories c ON p.CATEGORY_ID = c.CATEGORY_ID WHERE c.CATEGORY_NAME = 'Beverages'"
+  },
+  {
+    "title": "16. Her tedarikçinin sağladığı ürünleri ve stok toplamını yazdırın.",
+    "hint": "Suppliers ve Products tablolarını JOIN edin, SUM(UnitsInStock) kullanın.",
+    "sql": "SELECT s.COMPANY_NAME, COUNT(p.PRODUCT_ID) AS ProductCount, SUM(p.UNITS_IN_STOCK) AS TotalStock FROM Suppliers s JOIN Products p ON s.SUPPLIER_ID = p.SUPPLIER_ID GROUP BY s.SUPPLIER_ID, s.COMPANY_NAME"
+  },
+  {
+    "title": "17. En az iki kez sipariş edilen ürünleri bulun.",
+    "hint": "Order Details'de GROUP BY ProductID, COUNT(*) >= 2 koşulu kullanın.",
+    "sql": "SELECT PRODUCT_ID, COUNT(*) AS OrderCount FROM [Order Details] GROUP BY PRODUCT_ID HAVING COUNT(*) >= 2"
+  },
+  {
+    "title": "18. Her ülke için müşteri sayısı ve ortalama sipariş tutarını listeleyin.",
+    "hint": "Customers, Orders ve Order Details tablolarını JOIN edin.",
+    "sql": "SELECT c.Country, COUNT(DISTINCT c.CUSTOMER_ID) AS CustomerCount, AVG(od.UNIT_PRICE * od.QUANTITY * (1 - od.DISCOUNT)) AS AvgOrderAmount FROM Customers c JOIN Orders o ON c.CUSTOMER_ID = o.CUSTOMER_ID JOIN [Order Details] od ON o.ORDER_ID = od.ORDER_ID GROUP BY c.Country"
+  },
+  {
+    "title": "19. Her çalışanın son 3 siparişini listeleyin.",
+    "hint": "Window function ROW_NUMBER() OVER (PARTITION BY EmployeeID ORDER BY OrderDate DESC) kullanın.",
+    "sql": "SELECT EMPLOYEE_ID, ORDER_ID, ORDER_DATE FROM ( SELECT EMPLOYEE_ID, ORDER_ID, ORDER_DATE, ROW_NUMBER() OVER (PARTITION BY EMPLOYEE_ID ORDER BY ORDER_DATE DESC) as rn FROM Orders ) ranked WHERE rn <= 3"
+  },
+  {
+    "title": "20. Çalışan başına yıllık toplam satış miktarını bulun.",
+    "hint": "Orders ve Order Details'i JOIN edin, YEAR(OrderDate) ile gruplandırın.",
+    "sql": "SELECT e.FIRST_NAME + ' ' + e.LAST_NAME AS EmployeeName, YEAR(o.ORDER_DATE) AS OrderYear, SUM(od.UNIT_PRICE * od.QUANTITY * (1 - od.DISCOUNT)) AS TotalSales FROM Employees e JOIN Orders o ON e.EMPLOYEE_ID = o.EMPLOYEE_ID JOIN [Order Details] od ON o.ORDER_ID = od.ORDER_ID GROUP BY e.EMPLOYEE_ID, e.FIRST_NAME, e.LAST_NAME, YEAR(o.ORDER_DATE)"
+  },
+  {
+    "title": "21. Her siparişteki indirimli ürünlerin toplam indirim tutarını bulun.",
+    "hint": "Order Details'de (UnitPrice * Quantity * Discount) formülünü kullanın.",
+    "sql": "SELECT ORDER_ID, SUM(UNIT_PRICE * QUANTITY * DISCOUNT) AS TotalDiscount FROM [Order Details] WHERE DISCOUNT > 0 GROUP BY ORDER_ID"
+  },
+  {
+    "title": "22. Kategorilere göre ürünlerin ortalama fiyatını ve varyansını hesaplayın.",
+    "hint": "AVG() ve VAR() fonksiyonlarını kullanın, GROUP BY CategoryID.",
+    "sql": "SELECT c.CATEGORY_NAME, AVG(p.UNIT_PRICE) AS AvgPrice, VAR(p.UNIT_PRICE) AS PriceVariance FROM Categories c JOIN Products p ON c.CATEGORY_ID = p.CATEGORY_ID GROUP BY c.CATEGORY_ID, c.CATEGORY_NAME"
+  },
+  {
+    "title": "23. 1996 yılında en fazla satılan 3 ürünü listeleyin.",
+    "hint": "YEAR(OrderDate) = 1996 koşulu, SUM(Quantity) ile sıralayın.",
+    "sql": "SELECT TOP 3 p.PRODUCT_NAME, SUM(od.QUANTITY) AS TotalSold FROM Products p JOIN [Order Details] od ON p.PRODUCT_ID = od.PRODUCT_ID JOIN Orders o ON od.ORDER_ID = o.ORDER_ID WHERE YEAR(o.ORDER_DATE) = 1996 GROUP BY p.PRODUCT_ID, p.PRODUCT_NAME ORDER BY SUM(od.QUANTITY) DESC"
+  },
+  {
+    "title": "24. İki tedarikçiden sağlanan aynı fiyatlı ürünleri listeleyin.",
+    "hint": "Products tablosunu kendi kendisiyle UnitPrice üzerinden JOIN edin.",
+    "sql": "SELECT p1.PRODUCT_NAME, p1.UNIT_PRICE, s1.COMPANY_NAME AS Supplier1, s2.COMPANY_NAME AS Supplier2 FROM Products p1 JOIN Products p2 ON p1.UNIT_PRICE = p2.UNIT_PRICE AND p1.SUPPLIER_ID != p2.SUPPLIER_ID JOIN Suppliers s1 ON p1.SUPPLIER_ID = s1.SUPPLIER_ID JOIN Suppliers s2 ON p2.SUPPLIER_ID = s2.SUPPLIER_ID WHERE p1.PRODUCT_ID < p2.PRODUCT_ID"
+  },
+  {
+    "title": "25. Sipariş tarihi ve gönderim tarihi farkı en uzun olan siparişi bulun.",
+    "hint": "DATEDIFF(ShippedDate, OrderDate) kullanın, MAX ile bulun.",
+    "sql": "SELECT TOP 1 ORDER_ID, ORDER_DATE, SHIPPED_DATE, DATEDIFF(day, ORDER_DATE, SHIPPED_DATE) AS DaysDifference FROM Orders WHERE SHIPPED_DATE IS NOT NULL ORDER BY DATEDIFF(day, ORDER_DATE, SHIPPED_DATE) DESC"
+  },
+  {
+    "title": "26. Her çalışanın günlük ortalama sipariş miktarını listeleyin.",
+    "hint": "COUNT(OrderID) / COUNT(DISTINCT OrderDate) formülünü kullanın.",
+    "sql": "SELECT e.FIRST_NAME + ' ' + e.LAST_NAME AS EmployeeName, COUNT(o.ORDER_ID) * 1.0 / COUNT(DISTINCT o.ORDER_DATE) AS AvgOrdersPerDay FROM Employees e JOIN Orders o ON e.EMPLOYEE_ID = o.EMPLOYEE_ID GROUP BY e.EMPLOYEE_ID, e.FIRST_NAME, e.LAST_NAME"
+  },
+  {
+    "title": "27. Her müşterinin sipariş başına ortalama harcamasını hesaplayın.",
+    "hint": "Toplam harcama / sipariş sayısı formülünü kullanın.",
+    "sql": "SELECT c.COMPANY_NAME, SUM(od.UNIT_PRICE * od.QUANTITY * (1 - od.DISCOUNT)) / COUNT(DISTINCT o.ORDER_ID) AS AvgOrderAmount FROM Customers c JOIN Orders o ON c.CUSTOMER_ID = o.CUSTOMER_ID JOIN [Order Details] od ON o.ORDER_ID = od.ORDER_ID GROUP BY c.CUSTOMER_ID, c.COMPANY_NAME"
+  },
+  {
+    "title": "28. Kategorilere göre toplam satış cirosunu hesaplayın.",
+    "hint": "Products, Categories ve Order Details tablolarını JOIN edin.",
+    "sql": "SELECT c.CATEGORY_NAME, SUM(od.UNIT_PRICE * od.QUANTITY * (1 - od.DISCOUNT)) AS TotalRevenue FROM Categories c JOIN Products p ON c.CATEGORY_ID = p.CATEGORY_ID JOIN [Order Details] od ON p.PRODUCT_ID = od.PRODUCT_ID GROUP BY c.CATEGORY_ID, c.CATEGORY_NAME"
+  },
+  {
+    "title": "29. Bir üründen kaç farklı müşteriye satış yapıldığını bulun.",
+    "hint": "COUNT(DISTINCT CustomerID) kullanın, Orders ve Order Details'i JOIN edin.",
+    "sql": "SELECT p.PRODUCT_NAME, COUNT(DISTINCT o.CUSTOMER_ID) AS UniqueCustomers FROM Products p JOIN [Order Details] od ON p.PRODUCT_ID = od.PRODUCT_ID JOIN Orders o ON od.ORDER_ID = o.ORDER_ID GROUP BY p.PRODUCT_ID, p.PRODUCT_NAME"
+  },
+  {
+    "title": "30. Aynı gün verilen siparişleri listeleyin.",
+    "hint": "GROUP BY OrderDate, COUNT(*) > 1 koşulu kullanın.",
+    "sql": "SELECT ORDER_DATE, COUNT(*) AS OrderCount FROM Orders GROUP BY ORDER_DATE HAVING COUNT(*) > 1 ORDER BY ORDER_DATE"
+  },
+  {
+    "title": "31. Ürün bazlı toplam indirim tutarını hesaplayın.",
+    "hint": "Order Details'de SUM(UnitPrice * Quantity * Discount) kullanın.",
+    "sql": "SELECT p.PRODUCT_NAME, SUM(od.UNIT_PRICE * od.QUANTITY * od.DISCOUNT) AS TotalDiscount FROM Products p JOIN [Order Details] od ON p.PRODUCT_ID = od.PRODUCT_ID GROUP BY p.PRODUCT_ID, p.PRODUCT_NAME"
+  },
+  {
+    "title": "32. En fazla ülkeye satış yapan çalışanı bulun.",
+    "hint": "COUNT(DISTINCT Country) kullanın, Orders ve Customers'ı JOIN edin.",
+    "sql": "SELECT TOP 1 e.FIRST_NAME + ' ' + e.LAST_NAME AS EmployeeName, COUNT(DISTINCT c.Country) AS CountriesCount FROM Employees e JOIN Orders o ON e.EMPLOYEE_ID = o.EMPLOYEE_ID JOIN Customers c ON o.CUSTOMER_ID = c.CUSTOMER_ID GROUP BY e.EMPLOYEE_ID, e.FIRST_NAME, e.LAST_NAME ORDER BY COUNT(DISTINCT c.Country) DESC"
+  },
+  {
+    "title": "33. Siparişi verilen ama gönderilmeyen siparişleri listeleyin.",
+    "hint": "ShippedDate IS NULL koşulunu kullanın.",
+    "sql": "SELECT ORDER_ID, CUSTOMER_ID, ORDER_DATE FROM Orders WHERE SHIPPED_DATE IS NULL"
+  },
+  {
+    "title": "34. Hiç sipariş almamış çalışanları listeleyin.",
+    "hint": "LEFT JOIN kullanın, Orders.EmployeeID IS NULL koşulu.",
+    "sql": "SELECT e.FIRST_NAME + ' ' + e.LAST_NAME AS EmployeeName FROM Employees e LEFT JOIN Orders o ON e.EMPLOYEE_ID = o.EMPLOYEE_ID WHERE o.EMPLOYEE_ID IS NULL"
+  },
+  {
+    "title": "35. Her siparişteki ortalama ürün fiyatını hesaplayın.",
+    "hint": "Order Details'de AVG(UnitPrice) kullanın, GROUP BY OrderID.",
+    "sql": "SELECT ORDER_ID, AVG(UNIT_PRICE) AS AvgProductPrice FROM [Order Details] GROUP BY ORDER_ID"
+  },
+  {
+    "title": "36. Sipariş detaylarını gösteren ve toplam sipariş tutarını içeren bir tablo oluşturun.",
+    "hint": "Window function SUM() OVER (PARTITION BY OrderID) kullanın.",
+    "sql": "SELECT od.ORDER_ID, od.PRODUCT_ID, od.UNIT_PRICE, od.QUANTITY, od.DISCOUNT, SUM(od.UNIT_PRICE * od.QUANTITY * (1 - od.DISCOUNT)) OVER (PARTITION BY od.ORDER_ID) AS OrderTotal FROM [Order Details] od"
+  },
+  {
+    "title": "37. Ürünlerin brüt ve net cirolarını (indirimli/indirimsiz) karşılaştırmalı listeleyin.",
+    "hint": "İki ayrı SUM hesaplaması yapın: indirimli ve indirimsiz.",
+    "sql": "SELECT p.PRODUCT_NAME, SUM(od.UNIT_PRICE * od.QUANTITY) AS GrossRevenue, SUM(od.UNIT_PRICE * od.QUANTITY * (1 - od.DISCOUNT)) AS NetRevenue FROM Products p JOIN [Order Details] od ON p.PRODUCT_ID = od.PRODUCT_ID GROUP BY p.PRODUCT_ID, p.PRODUCT_NAME"
+  },
+  {
+    "title": "38. En çok müşterisi olan şehirleri sıralayın.",
+    "hint": "Customers tablosunda GROUP BY City, COUNT(*) ile sıralayın.",
+    "sql": "SELECT City, COUNT(*) AS CustomerCount FROM Customers GROUP BY City ORDER BY COUNT(*) DESC"
+  },
+  {
+    "title": "39. Her yıl için kategori bazlı satış cirosunu listeleyin.",
+    "hint": "YEAR(OrderDate) ve CategoryID ile gruplandırın.",
+    "sql": "SELECT YEAR(o.ORDER_DATE) AS OrderYear, c.CATEGORY_NAME, SUM(od.UNIT_PRICE * od.QUANTITY * (1 - od.DISCOUNT)) AS CategoryRevenue FROM Orders o JOIN [Order Details] od ON o.ORDER_ID = od.ORDER_ID JOIN Products p ON od.PRODUCT_ID = p.PRODUCT_ID JOIN Categories c ON p.CATEGORY_ID = c.CATEGORY_ID GROUP BY YEAR(o.ORDER_DATE), c.CATEGORY_ID, c.CATEGORY_NAME ORDER BY OrderYear, CategoryRevenue DESC"
+  },
+  {
+    "title": "40. Hangi siparişlerde aynı üründen birden fazla adet satılmıştır?",
+    "hint": "Order Details'de Quantity > 1 koşulunu kullanın.",
+    "sql": "SELECT ORDER_ID, PRODUCT_ID, QUANTITY FROM [Order Details] WHERE QUANTITY > 1"
+  },
+  {
+    "title": "41. Hangi müşteriler aynı gün birden fazla sipariş vermiştir?",
+    "hint": "GROUP BY CustomerID, OrderDate, COUNT(*) > 1 koşulu.",
+    "sql": "SELECT CUSTOMER_ID, ORDER_DATE, COUNT(*) AS OrderCount FROM Orders GROUP BY CUSTOMER_ID, ORDER_DATE HAVING COUNT(*) > 1"
+  },
+  {
+    "title": "42. Sipariş tarihi ile gönderim tarihi farkı ortalamasını yıl bazında gösterin.",
+    "hint": "AVG(DATEDIFF(ShippedDate, OrderDate)) kullanın.",
+    "sql": "SELECT YEAR(ORDER_DATE) AS OrderYear, AVG(DATEDIFF(day, ORDER_DATE, SHIPPED_DATE)) AS AvgShippingDays FROM Orders WHERE SHIPPED_DATE IS NOT NULL GROUP BY YEAR(ORDER_DATE)"
+  },
+  {
+    "title": "43. Her tedarikçinin toplam satış cirosunu ve ürün sayısını gösterin.",
+    "hint": "Suppliers, Products ve Order Details tablolarını JOIN edin.",
+    "sql": "SELECT s.COMPANY_NAME, COUNT(DISTINCT p.PRODUCT_ID) AS ProductCount, SUM(od.UNIT_PRICE * od.QUANTITY * (1 - od.DISCOUNT)) AS TotalRevenue FROM Suppliers s JOIN Products p ON s.SUPPLIER_ID = p.SUPPLIER_ID JOIN [Order Details] od ON p.PRODUCT_ID = od.PRODUCT_ID GROUP BY s.SUPPLIER_ID, s.COMPANY_NAME"
+  },
+  {
+    "title": "44. Hangi ürünlerin toplam cirosu, ortalama ürün cirosunun üzerindedir?",
+    "hint": "Subquery ile ortalamayı hesaplayın, HAVING kullanın.",
+    "sql": "SELECT p.PRODUCT_NAME, SUM(od.UNIT_PRICE * od.QUANTITY * (1 - od.DISCOUNT)) AS ProductRevenue FROM Products p JOIN [Order Details] od ON p.PRODUCT_ID = od.PRODUCT_ID GROUP BY p.PRODUCT_ID, p.PRODUCT_NAME HAVING SUM(od.UNIT_PRICE * od.QUANTITY * (1 - od.DISCOUNT)) > (SELECT AVG(ProductRevenue) FROM (SELECT SUM(od2.UNIT_PRICE * od2.QUANTITY * (1 - od2.DISCOUNT)) AS ProductRevenue FROM [Order Details] od2 GROUP BY od2.PRODUCT_ID) AS AvgCalc)"
+  },
+  {
+    "title": "45. Kategorilere göre ürünlerin en yüksek ve en düşük fiyatlarını listeleyin.",
+    "hint": "MAX(UnitPrice) ve MIN(UnitPrice) fonksiyonlarını kullanın.",
+    "sql": "SELECT c.CATEGORY_NAME, MAX(p.UNIT_PRICE) AS MaxPrice, MIN(p.UNIT_PRICE) AS MinPrice FROM Categories c JOIN Products p ON c.CATEGORY_ID = p.CATEGORY_ID GROUP BY c.CATEGORY_ID, c.CATEGORY_NAME"
+  },
+  {
+    "title": "46. Tedarikçilerden sadece bir ürün sağlayanları listeleyin.",
+    "hint": "GROUP BY SupplierID, COUNT(*) = 1 koşulu.",
+    "sql": "SELECT s.COMPANY_NAME FROM Suppliers s JOIN Products p ON s.SUPPLIER_ID = p.SUPPLIER_ID GROUP BY s.SUPPLIER_ID, s.COMPANY_NAME HAVING COUNT(*) = 1"
+  },
+  {
+    "title": "47. Sipariş tutarının %10'undan fazla indirim yapılan siparişleri listeleyin.",
+    "hint": "Toplam indirim / toplam tutar > 0.1 koşulunu kullanın.",
+    "sql": "SELECT ORDER_ID, SUM(UNIT_PRICE * QUANTITY * DISCOUNT) AS TotalDiscount, SUM(UNIT_PRICE * QUANTITY) AS TotalAmount FROM [Order Details] GROUP BY ORDER_ID HAVING SUM(UNIT_PRICE * QUANTITY * DISCOUNT) > SUM(UNIT_PRICE * QUANTITY) * 0.1"
+  },
+  {
+    "title": "48. 1996–1998 arasında her ay verilen sipariş sayısını gösterin.",
+    "hint": "YEAR(OrderDate) ve MONTH(OrderDate) ile gruplandırın.",
+    "sql": "SELECT YEAR(ORDER_DATE) AS OrderYear, MONTH(ORDER_DATE) AS OrderMonth, COUNT(*) AS OrderCount FROM Orders WHERE YEAR(ORDER_DATE) BETWEEN 1996 AND 1998 GROUP BY YEAR(ORDER_DATE), MONTH(ORDER_DATE) ORDER BY OrderYear, OrderMonth"
+  },
+  {
+    "title": "49. Sipariş detaylarını pivot tablo şeklinde: satırda siparişler, sütunda ürünler (0 olmayanlar).",
+    "hint": "CASE WHEN ile conditional aggregation kullanın.",
+    "sql": "SELECT ORDER_ID, SUM(CASE WHEN PRODUCT_ID = 1 THEN QUANTITY ELSE 0 END) AS Product1, SUM(CASE WHEN PRODUCT_ID = 2 THEN QUANTITY ELSE 0 END) AS Product2, SUM(CASE WHEN PRODUCT_ID = 3 THEN QUANTITY ELSE 0 END) AS Product3 -- Bu şekilde tüm ürünler için devam eder FROM [Order Details] GROUP BY ORDER_ID"
+  },
+  {
+    "title": "50. Çalışan bazında ortalama sipariş süresi (gönderim - sipariş) gün olarak hesaplayın.",
+    "hint": "AVG(DATEDIFF(ShippedDate, OrderDate)) kullanın.",
+    "sql": "SELECT e.FIRST_NAME + ' ' + e.LAST_NAME AS EmployeeName, AVG(DATEDIFF(day, o.ORDER_DATE, o.SHIPPED_DATE)) AS AvgShippingDays FROM Employees e JOIN Orders o ON e.EMPLOYEE_ID = o.EMPLOYEE_ID WHERE o.SHIPPED_DATE IS NOT NULL GROUP BY e.EMPLOYEE_ID, e.FIRST_NAME, e.LAST_NAME"
+  },
+  {
+    "title": "51. Her siparişteki en pahalı ürünü ve fiyatını bulun.",
+    "hint": "Window function RANK() OVER (PARTITION BY OrderID ORDER BY UnitPrice DESC).",
+    "sql": "SELECT ORDER_ID, PRODUCT_ID, UNIT_PRICE FROM ( SELECT ORDER_ID, PRODUCT_ID, UNIT_PRICE, RANK() OVER (PARTITION BY ORDER_ID ORDER BY UNIT_PRICE DESC) as rn FROM [Order Details] ) ranked WHERE rn = 1"
+  },
+  {
+    "title": "52. Her müşterinin ilk sipariş tarihini ve toplam sipariş sayısını listeleyin.",
+    "hint": "MIN(OrderDate) ve COUNT(*) fonksiyonlarını kullanın.",
+    "sql": "SELECT c.COMPANY_NAME, MIN(o.ORDER_DATE) AS FirstOrderDate, COUNT(o.ORDER_ID) AS TotalOrders FROM Customers c JOIN Orders o ON c.CUSTOMER_ID = o.CUSTOMER_ID GROUP BY c.CUSTOMER_ID, c.COMPANY_NAME"
+  },
+  {
+    "title": "53. Her sipariş için ortalama indirim oranını hesaplayın.",
+    "hint": "AVG(Discount) kullanın, GROUP BY OrderID.",
+    "sql": "SELECT ORDER_ID, AVG(DISCOUNT) AS AvgDiscountRate FROM [Order Details] GROUP BY ORDER_ID"
+  },
+  {
+    "title": "54. Çalışanların ortalama gönderim süresi performansını karşılaştırın.",
+    "hint": "Her çalışan için AVG(DATEDIFF) hesaplayın.",
+    "sql": "SELECT e.FIRST_NAME + ' ' + e.LAST_NAME AS EmployeeName, AVG(DATEDIFF(day, o.ORDER_DATE, o.SHIPPED_DATE)) AS AvgShippingDays, RANK() OVER (ORDER BY AVG(DATEDIFF(day, o.ORDER_DATE, o.SHIPPED_DATE))) AS PerformanceRank FROM Employees e JOIN Orders o ON e.EMPLOYEE_ID = o.EMPLOYEE_ID WHERE o.SHIPPED_DATE IS NOT NULL GROUP BY e.EMPLOYEE_ID, e.FIRST_NAME, e.LAST_NAME"
+  },
+  {
+    "title": "55. 2 çalışan aynı gün aynı müşteriye sipariş girişi yapmış mı?",
+    "hint": "GROUP BY CustomerID, OrderDate, COUNT(DISTINCT EmployeeID) > 1.",
+    "sql": "SELECT CUSTOMER_ID, ORDER_DATE, COUNT(DISTINCT EMPLOYEE_ID) AS EmployeeCount FROM Orders GROUP BY CUSTOMER_ID, ORDER_DATE HAVING COUNT(DISTINCT EMPLOYEE_ID) > 1"
+  },
+  {
+    "title": "56. Her çalışanın en çok sipariş aldığı müşteriyi bulun.",
+    "hint": "Window function ile RANK() kullanın.",
+    "sql": "SELECT EMPLOYEE_ID, CUSTOMER_ID, OrderCount FROM ( SELECT o.EMPLOYEE_ID, o.CUSTOMER_ID, COUNT(*) AS OrderCount, ROW_NUMBER() OVER (PARTITION BY o.EMPLOYEE_ID ORDER BY COUNT(*) DESC) as rn FROM Orders o GROUP BY o.EMPLOYEE_ID, o.CUSTOMER_ID ) ranked WHERE rn = 1"
+  },
+  {
+    "title": "57. Her ay, en fazla sipariş alan çalışanı listeleyin.",
+    "hint": "YEAR(OrderDate), MONTH(OrderDate) ile gruplandırın.",
+    "sql": "SELECT OrderYear, OrderMonth, EMPLOYEE_ID, OrderCount FROM ( SELECT YEAR(ORDER_DATE) AS OrderYear, MONTH(ORDER_DATE) AS OrderMonth, EMPLOYEE_ID, COUNT(*) AS OrderCount, ROW_NUMBER() OVER (PARTITION BY YEAR(ORDER_DATE), MONTH(ORDER_DATE) ORDER BY COUNT(*) DESC) as rn FROM Orders GROUP BY YEAR(ORDER_DATE), MONTH(ORDER_DATE), EMPLOYEE_ID ) ranked WHERE rn = 1"
+  },
+  {
+    "title": "58. Ürünlerin fiyat değişimlerini simüle eden zaman serisi tablosu oluşturun.",
+    "hint": "ROW_NUMBER() ve LAG() window fonksiyonlarını kullanın.",
+    "sql": "SELECT p.PRODUCT_NAME, o.ORDER_DATE, od.UNIT_PRICE, LAG(od.UNIT_PRICE) OVER (PARTITION BY p.PRODUCT_ID ORDER BY o.ORDER_DATE) AS PrevPrice, od.UNIT_PRICE - LAG(od.UNIT_PRICE) OVER (PARTITION BY p.PRODUCT_ID ORDER BY o.ORDER_DATE) AS PriceChange FROM Products p JOIN [Order Details] od ON p.PRODUCT_ID = od.PRODUCT_ID JOIN Orders o ON od.ORDER_ID = o.ORDER_ID ORDER BY p.PRODUCT_ID, o.ORDER_DATE"
+  },
+  {
+    "title": "59. Bir müşterinin önceki siparişiyle son siparişi arasındaki farkı hesaplayın.",
+    "hint": "LAG() window function kullanın.",
+    "sql": "SELECT CUSTOMER_ID, ORDER_DATE, LAG(ORDER_DATE) OVER (PARTITION BY CUSTOMER_ID ORDER BY ORDER_DATE) AS PrevOrderDate, DATEDIFF(day, LAG(ORDER_DATE) OVER (PARTITION BY CUSTOMER_ID ORDER BY ORDER_DATE), ORDER_DATE) AS DaysBetweenOrders FROM Orders ORDER BY CUSTOMER_ID, ORDER_DATE"
+  },
+  {
+    "title": "60. Günlük ortalama sipariş adedi ve toplam tutarını karşılaştırın.",
+    "hint": "GROUP BY OrderDate, COUNT(*) ve SUM() kullanın.",
+    "sql": "SELECT o.ORDER_DATE, COUNT(*) AS OrderCount, SUM(od.UNIT_PRICE * od.QUANTITY * (1 - od.DISCOUNT)) AS TotalAmount, AVG(od.UNIT_PRICE * od.QUANTITY * (1 - od.DISCOUNT)) AS AvgOrderAmount FROM Orders o JOIN [Order Details] od ON o.ORDER_ID = od.ORDER_ID GROUP BY o.ORDER_DATE ORDER BY o.ORDER_DATE"
+  },
+  {
+    "title": "61. Her siparişteki ürünleri fiyata göre sırala ve sıra numarası ver.",
+    "hint": "ROW_NUMBER() OVER (PARTITION BY OrderID ORDER BY UnitPrice) kullanın.",
+    "sql": "SELECT ORDER_ID, PRODUCT_ID, UNIT_PRICE, ROW_NUMBER() OVER (PARTITION BY ORDER_ID ORDER BY UNIT_PRICE DESC) AS PriceRank FROM [Order Details] ORDER BY ORDER_ID, PriceRank"
+  },
+  {
+    "title": "62. Her yılın %10'luk dilimindeki en pahalı ürünleri bulun.",
+    "hint": "NTILE(10) window function kullanın.",
+    "sql": "SELECT PRODUCT_NAME, YEAR(o.ORDER_DATE) AS OrderYear, od.UNIT_PRICE, PriceDecile FROM ( SELECT p.PRODUCT_NAME, o.ORDER_DATE, od.UNIT_PRICE, NTILE(10) OVER (PARTITION BY YEAR(o.ORDER_DATE) ORDER BY od.UNIT_PRICE) AS PriceDecile FROM Products p JOIN [Order Details] od ON p.PRODUCT_ID = od.PRODUCT_ID JOIN Orders o ON od.ORDER_ID = o.ORDER_ID ) ranked WHERE PriceDecile = 10"
+  },
+  {
+    "title": "63. Çalışanların birbirinin müşterisine işlem yapıp yapmadığını kontrol edin.",
+    "hint": "Self join ile farklı çalışanların aynı müşteriye yaptığı satışları kontrol edin.",
+    "sql": "SELECT o1.EMPLOYEE_ID AS Employee1, o2.EMPLOYEE_ID AS Employee2, o1.CUSTOMER_ID, COUNT(*) AS SharedCustomers FROM Orders o1 JOIN Orders o2 ON o1.CUSTOMER_ID = o2.CUSTOMER_ID AND o1.EMPLOYEE_ID != o2.EMPLOYEE_ID GROUP BY o1.EMPLOYEE_ID, o2.EMPLOYEE_ID, o1.CUSTOMER_ID ORDER BY o1.EMPLOYEE_ID, o2.EMPLOYEE_ID"
+  },
+  {
+    "title": "64. Her kategorideki ürünlerin, ortalama fiyat sapmasını bulun (std dev / avg).",
+    "hint": "STDDEV() / AVG() formülünü kullanın.",
+    "sql": "SELECT c.CATEGORY_NAME, AVG(p.UNIT_PRICE) AS AvgPrice, STDEV(p.UNIT_PRICE) AS StdDev, STDEV(p.UNIT_PRICE) / AVG(p.UNIT_PRICE) AS CoefficientOfVariation FROM Categories c JOIN Products p ON c.CATEGORY_ID = p.CATEGORY_ID GROUP BY c.CATEGORY_ID, c.CATEGORY_NAME"
+  },
+  {
+    "title": "65. Ürün fiyatları logaritmik olarak normal dağılıyor mu, ortalama ve varyansını bulun.",
+    "hint": "LOG(UnitPrice) üzerinde AVG() ve VAR() hesaplayın.",
+    "sql": "SELECT AVG(LOG(UNIT_PRICE)) AS LogAvgPrice, VAR(LOG(UNIT_PRICE)) AS LogVariance, STDEV(LOG(UNIT_PRICE)) AS LogStdDev FROM Products WHERE UNIT_PRICE > 0"
+  },
+  {
+    "title": "66. Son 6 ayda satış yapmayan ürünleri bulun.",
+    "hint": "LEFT JOIN ile son 6 aydaki siparişleri kontrol edin.",
+    "sql": "SELECT p.PRODUCT_NAME FROM Products p LEFT JOIN [Order Details] od ON p.PRODUCT_ID = od.PRODUCT_ID LEFT JOIN Orders o ON od.ORDER_ID = o.ORDER_ID AND o.ORDER_DATE >= DATEADD(month, -6, GETDATE()) WHERE o.ORDER_ID IS NULL"
+  },
+  {
+    "title": "67. Aynı müşteriye farklı çalışanlardan yapılan toplam satışları karşılaştırın.",
+    "hint": "GROUP BY CustomerID, EmployeeID ile satışları karşılaştırın.",
+    "sql": "SELECT o.CUSTOMER_ID, o.EMPLOYEE_ID, SUM(od.UNIT_PRICE * od.QUANTITY * (1 - od.DISCOUNT)) AS TotalSales FROM Orders o JOIN [Order Details] od ON o.ORDER_ID = od.ORDER_ID GROUP BY o.CUSTOMER_ID, o.EMPLOYEE_ID ORDER BY o.CUSTOMER_ID, TotalSales DESC"
+  },
+  {
+    "title": "68. Ülke bazında toplam satış, iade (negatif indirimli sipariş) ve net kar oranını hesaplayın.",
+    "hint": "Discount değerlerine göre pozitif/negatif satışları ayırın.",
+    "sql": "SELECT c.Country, SUM(CASE WHEN od.DISCOUNT >= 0 THEN od.UNIT_PRICE * od.QUANTITY * (1 - od.DISCOUNT) END) AS TotalSales, SUM(CASE WHEN od.DISCOUNT < 0 THEN ABS(od.UNIT_PRICE * od.QUANTITY * od.DISCOUNT) END) AS Returns, SUM(od.UNIT_PRICE * od.QUANTITY * (1 - od.DISCOUNT)) AS NetRevenue FROM Customers c JOIN Orders o ON c.CUSTOMER_ID = o.CUSTOMER_ID JOIN [Order Details] od ON o.ORDER_ID = od.ORDER_ID GROUP BY c.Country"
+  },
+  {
+    "title": "69. Her siparişteki ürünlerin yüzde kaçının indirimli olduğunu bulun.",
+    "hint": "COUNT(CASE WHEN Discount > 0) / COUNT(*) * 100 formülü.",
+    "sql": "SELECT ORDER_ID, COUNT(*) AS TotalProducts, SUM(CASE WHEN DISCOUNT > 0 THEN 1 ELSE 0 END) AS DiscountedProducts, (SUM(CASE WHEN DISCOUNT > 0 THEN 1 ELSE 0 END) * 100.0 / COUNT(*)) AS DiscountPercentage FROM [Order Details] GROUP BY ORDER_ID"
+  },
+  {
+    "title": "70. Çalışan bazında müşterilerle kurulan etkileşim süresini ölçün (ilk–son sipariş).",
+    "hint": "MAX(OrderDate) - MIN(OrderDate) formülünü kullanın.",
+    "sql": "SELECT e.FIRST_NAME + ' ' + e.LAST_NAME AS EmployeeName, c.COMPANY_NAME, MIN(o.ORDER_DATE) AS FirstOrder, MAX(o.ORDER_DATE) AS LastOrder, DATEDIFF(day, MIN(o.ORDER_DATE), MAX(o.ORDER_DATE)) AS InteractionDays FROM Employees e JOIN Orders o ON e.EMPLOYEE_ID = o.EMPLOYEE_ID JOIN Customers c ON o.CUSTOMER_ID = c.CUSTOMER_ID GROUP BY e.EMPLOYEE_ID, e.FIRST_NAME, e.LAST_NAME, c.CUSTOMER_ID, c.COMPANY_NAME HAVING COUNT(o.ORDER_ID) > 1"
+  },
+  {
+    "title": "71. Her kategori için ay bazında trend analiz tablosu oluşturun.",
+    "hint": "YEAR(OrderDate), MONTH(OrderDate) ile gruplandırın.",
+    "sql": "SELECT c.CATEGORY_NAME, YEAR(o.ORDER_DATE) AS OrderYear, MONTH(o.ORDER_DATE) AS OrderMonth, SUM(od.UNIT_PRICE * od.QUANTITY * (1 - od.DISCOUNT)) AS MonthlyRevenue, LAG(SUM(od.UNIT_PRICE * od.QUANTITY * (1 - od.DISCOUNT))) OVER (PARTITION BY c.CATEGORY_ID ORDER BY YEAR(o.ORDER_DATE), MONTH(o.ORDER_DATE)) AS PrevMonthRevenue FROM Categories c JOIN Products p ON c.CATEGORY_ID = p.CATEGORY_ID JOIN [Order Details] od ON p.PRODUCT_ID = od.PRODUCT_ID JOIN Orders o ON od.ORDER_ID = o.ORDER_ID GROUP BY c.CATEGORY_ID, c.CATEGORY_NAME, YEAR(o.ORDER_DATE), MONTH(o.ORDER_DATE) ORDER BY c.CATEGORY_NAME, OrderYear, OrderMonth"
+  },
+  {
+    "title": "72. Aylık satış artış yüzdesini hesaplayın.",
+    "hint": "LAG() window function ile önceki ay ile karşılaştırın.",
+    "sql": "SELECT OrderYear, OrderMonth, MonthlyRevenue, PrevMonthRevenue, CASE WHEN PrevMonthRevenue IS NOT NULL AND PrevMonthRevenue != 0 THEN ((MonthlyRevenue - PrevMonthRevenue) * 100.0 / PrevMonthRevenue) ELSE NULL END AS GrowthPercentage FROM ( SELECT YEAR(o.ORDER_DATE) AS OrderYear, MONTH(o.ORDER_DATE) AS OrderMonth, SUM(od.UNIT_PRICE * od.QUANTITY * (1 - od.DISCOUNT)) AS MonthlyRevenue, LAG(SUM(od.UNIT_PRICE * od.QUANTITY * (1 - od.DISCOUNT))) OVER (ORDER BY YEAR(o.ORDER_DATE), MONTH(o.ORDER_DATE)) AS PrevMonthRevenue FROM Orders o JOIN [Order Details] od ON o.ORDER_ID = od.ORDER_ID GROUP BY YEAR(o.ORDER_DATE), MONTH(o.ORDER_DATE) ) monthly_data ORDER BY OrderYear, OrderMonth"
+  },
+  {
+    "title": "73. Ürünlerin fiyat/performans oranını belirlemek için yeni bir metrik oluşturun.",
+    "hint": "UnitPrice / (satış miktarı veya popülerlik) formülü geliştirin.",
+    "sql": "SELECT p.PRODUCT_NAME, p.UNIT_PRICE, SUM(od.QUANTITY) AS TotalSold, COUNT(DISTINCT od.ORDER_ID) AS OrderCount, p.UNIT_PRICE / SUM(od.QUANTITY) AS PricePerUnitSold, p.UNIT_PRICE / COUNT(DISTINCT od.ORDER_ID) AS PricePerOrder FROM Products p JOIN [Order Details] od ON p.PRODUCT_ID = od.PRODUCT_ID GROUP BY p.PRODUCT_ID, p.PRODUCT_NAME, p.UNIT_PRICE"
+  },
+  {
+    "title": "74. Son 1 yılda en hızlı gönderilen siparişleri listeleyin.",
+    "hint": "DATEDIFF(ShippedDate, OrderDate) en küçük olanları bulun.",
+    "sql": "SELECT TOP 10 ORDER_ID, ORDER_DATE, SHIPPED_DATE, DATEDIFF(day, ORDER_DATE, SHIPPED_DATE) AS ShippingDays FROM Orders WHERE ORDER_DATE >= DATEADD(year, -1, GETDATE()) AND SHIPPED_DATE IS NOT NULL ORDER BY DATEDIFF(day, ORDER_DATE, SHIPPED_DATE)"
+  },
+  {
+    "title": "75. Her müşterinin 'en pahalı' siparişini ve içindeki en pahalı ürünü gösterin.",
+    "hint": "Window function ile MAX() kullanın.",
+    "sql": "SELECT c.COMPANY_NAME, o.ORDER_ID, od.PRODUCT_ID, p.PRODUCT_NAME, od.UNIT_PRICE FROM ( SELECT CUSTOMER_ID, MAX(OrderTotal) AS MaxOrderTotal FROM ( SELECT o.CUSTOMER_ID, o.ORDER_ID, SUM(od.UNIT_PRICE * od.QUANTITY * (1 - od.DISCOUNT)) AS OrderTotal FROM Orders o JOIN [Order Details] od ON o.ORDER_ID = od.ORDER_ID GROUP BY o.CUSTOMER_ID, o.ORDER_ID ) order_totals GROUP BY CUSTOMER_ID ) max_orders JOIN Orders o ON max_orders.CUSTOMER_ID = o.CUSTOMER_ID JOIN [Order Details] od ON o.ORDER_ID = od.ORDER_ID JOIN Products p ON od.PRODUCT_ID = p.PRODUCT_ID JOIN Customers c ON o.CUSTOMER_ID = c.CUSTOMER_ID WHERE od.UNIT_PRICE = ( SELECT MAX(od2.UNIT_PRICE) FROM [Order Details] od2 WHERE od2.ORDER_ID = od.ORDER_ID )"
+  },
+  {
+    "title": "76. Satışların %80'ini oluşturan ürünleri listeleyin (Pareto analizi).",
+    "hint": "Cumulative sum ile toplam satışın %80'ini hesaplayın.",
+    "sql": "WITH ProductRevenue AS ( SELECT p.PRODUCT_ID, p.PRODUCT_NAME, SUM(od.UNIT_PRICE * od.QUANTITY * (1 - od.DISCOUNT)) AS ProductRevenue FROM Products p JOIN [Order Details] od ON p.PRODUCT_ID = od.PRODUCT_ID GROUP BY p.PRODUCT_ID, p.PRODUCT_NAME ), RevenueWithCumulative AS ( SELECT PRODUCT_ID, PRODUCT_NAME, ProductRevenue, SUM(ProductRevenue) OVER (ORDER BY ProductRevenue DESC) AS CumulativeRevenue, SUM(ProductRevenue) OVER () AS TotalRevenue FROM ProductRevenue ) SELECT PRODUCT_ID, PRODUCT_NAME, ProductRevenue, (CumulativeRevenue * 100.0 / TotalRevenue) AS CumulativePercentage FROM RevenueWithCumulative WHERE (CumulativeRevenue * 100.0 / TotalRevenue) <= 80 ORDER BY ProductRevenue DESC"
+  },
+  {
+    "title": "77. Kategorilere göre ürünlerin cirosunun medyanını hesaplayın.",
+    "hint": "PERCENTILE_CONT(0.5) window function kullanın.",
+    "sql": "SELECT c.CATEGORY_NAME, PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY ProductRevenue) AS MedianRevenue FROM ( SELECT p.CATEGORY_ID, SUM(od.UNIT_PRICE * od.QUANTITY * (1 - od.DISCOUNT)) AS ProductRevenue FROM Products p JOIN [Order Details] od ON p.PRODUCT_ID = od.PRODUCT_ID GROUP BY p.CATEGORY_ID, p.PRODUCT_ID ) product_revenues JOIN Categories c ON product_revenues.CATEGORY_ID = c.CATEGORY_ID GROUP BY c.CATEGORY_ID, c.CATEGORY_NAME"
+  },
+  {
+    "title": "78. Siparişe ait ürünler içinde fiyatı ortalamanın çok üstünde olanları seçin.",
+    "hint": "AVG() window function ile sipariş bazında ortalama hesaplayın.",
+    "sql": "SELECT od.ORDER_ID, od.PRODUCT_ID, p.PRODUCT_NAME, od.UNIT_PRICE, AvgOrderPrice FROM [Order Details] od JOIN Products p ON od.PRODUCT_ID = p.PRODUCT_ID JOIN ( SELECT ORDER_ID, AVG(UNIT_PRICE) AS AvgOrderPrice FROM [Order Details] GROUP BY ORDER_ID ) order_avgs ON od.ORDER_ID = order_avgs.ORDER_ID WHERE od.UNIT_PRICE > order_avgs.AvgOrderPrice * 1.5"
+  },
+  {
+    "title": "79. Aynı ürünü farklı fiyatlardan satın alan müşterileri tespit edin.",
+    "hint": "GROUP BY ProductID, CustomerID, COUNT(DISTINCT UnitPrice) > 1.",
+    "sql": "SELECT o.CUSTOMER_ID, c.COMPANY_NAME, od.PRODUCT_ID, p.PRODUCT_NAME, COUNT(DISTINCT od.UNIT_PRICE) AS DifferentPrices FROM Orders o JOIN [Order Details] od ON o.ORDER_ID = od.ORDER_ID JOIN Customers c ON o.CUSTOMER_ID = c.CUSTOMER_ID JOIN Products p ON od.PRODUCT_ID = p.PRODUCT_ID GROUP BY o.CUSTOMER_ID, c.COMPANY_NAME, od.PRODUCT_ID, p.PRODUCT_NAME HAVING COUNT(DISTINCT od.UNIT_PRICE) > 1"
+  },
+  {
+    "title": "80. Her çalışan için son 3 yıldaki satış trendini gösterin (yıllık).",
+    "hint": "YEAR(OrderDate) ile gruplandırın, son 3 yıl filtreleyin.",
+    "sql": "SELECT e.FIRST_NAME + ' ' + e.LAST_NAME AS EmployeeName, YEAR(o.ORDER_DATE) AS OrderYear, SUM(od.UNIT_PRICE * od.QUANTITY * (1 - od.DISCOUNT)) AS AnnualSales FROM Employees e JOIN Orders o ON e.EMPLOYEE_ID = o.EMPLOYEE_ID JOIN [Order Details] od ON o.ORDER_ID = od.ORDER_ID WHERE YEAR(o.ORDER_DATE) >= YEAR(GETDATE()) - 3 GROUP BY e.EMPLOYEE_ID, e.FIRST_NAME, e.LAST_NAME, YEAR(o.ORDER_DATE) ORDER BY e.EMPLOYEE_ID, YEAR(o.ORDER_DATE)"
+  },
+  {
+    "title": "81. Sipariş başına düşen ortalama kategori çeşitliliğini bulun.",
+    "hint": "COUNT(DISTINCT CategoryID) kullanın.",
+    "sql": "SELECT AVG(CategoryCount) AS AvgCategoriesPerOrder FROM ( SELECT od.ORDER_ID, COUNT(DISTINCT p.CATEGORY_ID) AS CategoryCount FROM [Order Details] od JOIN Products p ON od.PRODUCT_ID = p.PRODUCT_ID GROUP BY od.ORDER_ID ) order_categories"
+  },
+  {
+    "title": "82. İndirimsiz ve indirimli siparişlerin % oranlarını gösterin.",
+    "hint": "CASE WHEN Discount = 0 ile koşullu sayım yapın.",
+    "sql": "SELECT SUM(CASE WHEN DISCOUNT = 0 THEN 1 ELSE 0 END) * 100.0 / COUNT(*) AS NoDiscountPercentage, SUM(CASE WHEN DISCOUNT > 0 THEN 1 ELSE 0 END) * 100.0 / COUNT(*) AS DiscountPercentage FROM [Order Details]"
+  },
+  {
+    "title": "83. Ürün kategorileri bazında en çok satış yapılan ayları bulun.",
+    "hint": "MONTH(OrderDate) ile gruplandırın, MAX() kullanın.",
+    "sql": "SELECT c.CATEGORY_NAME, OrderMonth, MonthlyRevenue FROM ( SELECT p.CATEGORY_ID, MONTH(o.ORDER_DATE) AS OrderMonth, SUM(od.UNIT_PRICE * od.QUANTITY * (1 - od.DISCOUNT)) AS MonthlyRevenue, ROW_NUMBER() OVER (PARTITION BY p.CATEGORY_ID ORDER BY SUM(od.UNIT_PRICE * od.QUANTITY * (1 - od.DISCOUNT)) DESC) as rn FROM Products p JOIN [Order Details] od ON p.PRODUCT_ID = od.PRODUCT_ID JOIN Orders o ON od.ORDER_ID = o.ORDER_ID GROUP BY p.CATEGORY_ID, MONTH(o.ORDER_DATE) ) ranked JOIN Categories c ON ranked.CATEGORY_ID = c.CATEGORY_ID WHERE rn = 1"
+  },
+  {
+    "title": "84. Fiyatı ortalamanın %20 altına inen ürünleri listeleyin.",
+    "hint": "UnitPrice < (SELECT AVG(UnitPrice) * 0.8) koşulu.",
+    "sql": "SELECT PRODUCT_NAME, UNIT_PRICE, AvgPrice FROM Products p CROSS JOIN (SELECT AVG(UNIT_PRICE) AS AvgPrice FROM Products) avg_calc WHERE p.UNIT_PRICE < avg_calc.AvgPrice * 0.8"
+  },
+  {
+    "title": "85. Tedarikçilerin sağladığı ürünlerin toplam cirosunun zamanla değişimi.",
+    "hint": "Tarih bazında gruplandırıp trend analizi yapın.",
+    "sql": "SELECT s.COMPANY_NAME, YEAR(o.ORDER_DATE) AS OrderYear, MONTH(o.ORDER_DATE) AS OrderMonth, SUM(od.UNIT_PRICE * od.QUANTITY * (1 - od.DISCOUNT)) AS MonthlyRevenue FROM Suppliers s JOIN Products p ON s.SUPPLIER_ID = p.SUPPLIER_ID JOIN [Order Details] od ON p.PRODUCT_ID = od.PRODUCT_ID JOIN Orders o ON od.ORDER_ID = o.ORDER_ID GROUP BY s.SUPPLIER_ID, s.COMPANY_NAME, YEAR(o.ORDER_DATE), MONTH(o.ORDER_DATE) ORDER BY s.COMPANY_NAME, OrderYear, OrderMonth"
+  },
+  {
+    "title": "86. Her çalışanın ay bazında satış sayısını ve ciro değişimini gösteren tablo yapın.",
+    "hint": "YEAR-MONTH gruplandırması ve LAG() function.",
+    "sql": "SELECT e.FIRST_NAME + ' ' + e.LAST_NAME AS EmployeeName, YEAR(o.ORDER_DATE) AS OrderYear, MONTH(o.ORDER_DATE) AS OrderMonth, COUNT(o.ORDER_ID) AS OrderCount, SUM(od.UNIT_PRICE * od.QUANTITY * (1 - od.DISCOUNT)) AS MonthlyRevenue, LAG(SUM(od.UNIT_PRICE * od.QUANTITY * (1 - od.DISCOUNT))) OVER (PARTITION BY e.EMPLOYEE_ID ORDER BY YEAR(o.ORDER_DATE), MONTH(o.ORDER_DATE)) AS PrevMonthRevenue FROM Employees e JOIN Orders o ON e.EMPLOYEE_ID = o.EMPLOYEE_ID JOIN [Order Details] od ON o.ORDER_ID = od.ORDER_ID GROUP BY e.EMPLOYEE_ID, e.FIRST_NAME, e.LAST_NAME, YEAR(o.ORDER_DATE), MONTH(o.ORDER_DATE) ORDER BY e.EMPLOYEE_ID, OrderYear, OrderMonth"
+  },
+  {
+    "title": "87. En çok müşteri kaybedilen (satış olmayan) ayları listeleyin.",
+    "hint": "Önceki dönemde aktif olan ama sonraki dönemde olmayan müşterileri bulun.",
+    "sql": "WITH MonthlyCustomers AS ( SELECT YEAR(ORDER_DATE) AS OrderYear, MONTH(ORDER_DATE) AS OrderMonth, COUNT(DISTINCT CUSTOMER_ID) AS ActiveCustomers FROM Orders GROUP BY YEAR(ORDER_DATE), MONTH(ORDER_DATE) ), CustomerLoss AS ( SELECT OrderYear, OrderMonth, ActiveCustomers, LAG(ActiveCustomers) OVER (ORDER BY OrderYear, OrderMonth) AS PrevMonthCustomers, LAG(ActiveCustomers) OVER (ORDER BY OrderYear, OrderMonth) - ActiveCustomers AS CustomerLoss FROM MonthlyCustomers ) SELECT TOP 5 OrderYear, OrderMonth, CustomerLoss FROM CustomerLoss WHERE CustomerLoss > 0 ORDER BY CustomerLoss DESC"
+  },
+  {
+    "title": "88. 2 yıl üst üste artan satış yapan ürünleri listeleyin.",
+    "hint": "Yıllık satış trendlerini LAG() ile karşılaştırın.",
+    "sql": "WITH YearlySales AS ( SELECT p.PRODUCT_ID, p.PRODUCT_NAME, YEAR(o.ORDER_DATE) AS OrderYear, SUM(od.UNIT_PRICE * od.QUANTITY * (1 - od.DISCOUNT)) AS AnnualSales FROM Products p JOIN [Order Details] od ON p.PRODUCT_ID = od.PRODUCT_ID JOIN Orders o ON od.ORDER_ID = o.ORDER_ID GROUP BY p.PRODUCT_ID, p.PRODUCT_NAME, YEAR(o.ORDER_DATE) ), SalesGrowth AS ( SELECT PRODUCT_ID, PRODUCT_NAME, OrderYear, AnnualSales, LAG(AnnualSales) OVER (PARTITION BY PRODUCT_ID ORDER BY OrderYear) AS PrevYearSales, CASE WHEN AnnualSales > LAG(AnnualSales) OVER (PARTITION BY PRODUCT_ID ORDER BY OrderYear) THEN 1 ELSE 0 END AS IsGrowth FROM YearlySales ) SELECT PRODUCT_ID, PRODUCT_NAME FROM SalesGrowth WHERE IsGrowth = 1 GROUP BY PRODUCT_ID, PRODUCT_NAME HAVING COUNT(*) >= 2"
+  },
+  {
+    "title": "89. Farklı ülkelerdeki sipariş teslim süresinin karşılaştırmalı analizi.",
+    "hint": "Country bazında AVG(DATEDIFF) hesaplayın.",
+    "sql": "SELECT c.Country, COUNT(o.ORDER_ID) AS TotalOrders, AVG(DATEDIFF(day, o.ORDER_DATE, o.SHIPPED_DATE)) AS AvgShippingDays, MIN(DATEDIFF(day, o.ORDER_DATE, o.SHIPPED_DATE)) AS MinShippingDays, MAX(DATEDIFF(day, o.ORDER_DATE, o.SHIPPED_DATE)) AS MaxShippingDays FROM Customers c JOIN Orders o ON c.CUSTOMER_ID = o.CUSTOMER_ID WHERE o.SHIPPED_DATE IS NOT NULL GROUP BY c.Country ORDER BY AvgShippingDays"
+  },
+  {
+    "title": "90. Aynı kategoriden birden fazla ürün siparişi verilen siparişleri tespit edin.",
+    "hint": "GROUP BY OrderID, CategoryID, COUNT(DISTINCT ProductID) > 1.",
+    "sql": "SELECT od.ORDER_ID, p.CATEGORY_ID, c.CATEGORY_NAME, COUNT(DISTINCT od.PRODUCT_ID) AS ProductCount FROM [Order Details] od JOIN Products p ON od.PRODUCT_ID = p.PRODUCT_ID JOIN Categories c ON p.CATEGORY_ID = c.CATEGORY_ID GROUP BY od.ORDER_ID, p.CATEGORY_ID, c.CATEGORY_NAME HAVING COUNT(DISTINCT od.PRODUCT_ID) > 1"
+  },
+  {
+    "title": "91. Müşterilerin yıl içindeki alışveriş alışkanlıklarını analiz edin (sıklık, tutar, çeşit).",
+    "hint": "Aylık bazda COUNT(), SUM(), COUNT(DISTINCT) kullanın.",
+    "sql": "SELECT c.COMPANY_NAME, YEAR(o.ORDER_DATE) AS OrderYear, COUNT(o.ORDER_ID) AS OrderFrequency, SUM(od.UNIT_PRICE * od.QUANTITY * (1 - od.DISCOUNT)) AS TotalSpent, COUNT(DISTINCT od.PRODUCT_ID) AS ProductVariety, COUNT(DISTINCT p.CATEGORY_ID) AS CategoryVariety FROM Customers c JOIN Orders o ON c.CUSTOMER_ID = o.CUSTOMER_ID JOIN [Order Details] od ON o.ORDER_ID = od.ORDER_ID JOIN Products p ON od.PRODUCT_ID = p.PRODUCT_ID GROUP BY c.CUSTOMER_ID, c.COMPANY_NAME, YEAR(o.ORDER_DATE) ORDER BY c.COMPANY_NAME, OrderYear"
+  },
+  {
+    "title": "92. Siparişlerdeki ürün çeşitliliği ile toplam tutar arasında korelasyon var mı, kontrol edin.",
+    "hint": "CORR() function veya manuel korelasyon hesaplaması.",
+    "sql": "WITH OrderStats AS ( SELECT o.ORDER_ID, COUNT(DISTINCT od.PRODUCT_ID) AS ProductVariety, SUM(od.UNIT_PRICE * od.QUANTITY * (1 - od.DISCOUNT)) AS OrderTotal FROM Orders o JOIN [Order Details] od ON o.ORDER_ID = od.ORDER_ID GROUP BY o.ORDER_ID ) SELECT (COUNT(*) * SUM(ProductVariety * OrderTotal) - SUM(ProductVariety) * SUM(OrderTotal)) / (SQRT(COUNT(*) * SUM(ProductVariety * ProductVariety) - POWER(SUM(ProductVariety), 2)) * SQRT(COUNT(*) * SUM(OrderTotal * OrderTotal) - POWER(SUM(OrderTotal), 2))) AS Correlation FROM OrderStats"
+  },
+  {
+    "title": "93. Ortalama fiyatı en çok artan ürün kategorilerini listeleyin.",
+    "hint": "Zaman bazında AVG(UnitPrice) değişimini hesaplayın.",
+    "sql": "WITH CategoryPricesByYear AS ( SELECT c.CATEGORY_ID, c.CATEGORY_NAME, YEAR(o.ORDER_DATE) AS OrderYear, AVG(od.UNIT_PRICE) AS AvgPrice FROM Categories c JOIN Products p ON c.CATEGORY_ID = p.CATEGORY_ID JOIN [Order Details] od ON p.PRODUCT_ID = od.PRODUCT_ID JOIN Orders o ON od.ORDER_ID = o.ORDER_ID GROUP BY c.CATEGORY_ID, c.CATEGORY_NAME, YEAR(o.ORDER_DATE) ), PriceGrowth AS ( SELECT CATEGORY_ID, CATEGORY_NAME, OrderYear, AvgPrice, LAG(AvgPrice) OVER (PARTITION BY CATEGORY_ID ORDER BY OrderYear) AS PrevYearPrice, AvgPrice - LAG(AvgPrice) OVER (PARTITION BY CATEGORY_ID ORDER BY OrderYear) AS PriceIncrease FROM CategoryPricesByYear ) SELECT CATEGORY_NAME, AVG(PriceIncrease) AS AvgPriceIncrease FROM PriceGrowth WHERE PriceIncrease IS NOT NULL GROUP BY CATEGORY_ID, CATEGORY_NAME ORDER BY AvgPriceIncrease DESC"
+  },
+  {
+    "title": "94. Ülke bazlı olarak çalışan-müşteri eşleşme sayısını bulun.",
+    "hint": "DISTINCT EmployeeID-CustomerID çiftlerini sayın.",
+    "sql": "SELECT c.Country, COUNT(DISTINCT CONCAT(o.EMPLOYEE_ID, '-', o.CUSTOMER_ID)) AS UniqueEmployeeCustomerPairs FROM Customers c JOIN Orders o ON c.CUSTOMER_ID = o.CUSTOMER_ID GROUP BY c.Country ORDER BY UniqueEmployeeCustomerPairs DESC"
+  },
+  {
+    "title": "95. Her çalışanın müşteri sadakati puanını hesaplayın (tekrar alışverişe göre).",
+    "hint": "Müşteri başına sipariş sayısını çalışan bazında ortalayın.",
+    "sql": "SELECT e.FIRST_NAME + ' ' + e.LAST_NAME AS EmployeeName, COUNT(DISTINCT o.CUSTOMER_ID) AS UniqueCustomers, COUNT(o.ORDER_ID) AS TotalOrders, COUNT(o.ORDER_ID) * 1.0 / COUNT(DISTINCT o.CUSTOMER_ID) AS CustomerLoyaltyScore FROM Employees e JOIN Orders o ON e.EMPLOYEE_ID = o.EMPLOYEE_ID GROUP BY e.EMPLOYEE_ID, e.FIRST_NAME, e.LAST_NAME ORDER BY CustomerLoyaltyScore DESC"
+  },
+  {
+    "title": "96. Ürünlerin fiyat standardizasyonunu yapın (z-score normalization).",
+    "hint": "(UnitPrice - AVG(UnitPrice)) / STDDEV(UnitPrice) formülü.",
+    "sql": "SELECT PRODUCT_NAME, UNIT_PRICE, AvgPrice, StdDev, (UNIT_PRICE - AvgPrice) / StdDev AS ZScore FROM Products p CROSS JOIN ( SELECT AVG(UNIT_PRICE) AS AvgPrice, STDEV(UNIT_PRICE) AS StdDev FROM Products ) stats WHERE StdDev > 0"
+  },
+  {
+    "title": "97. Yıl sonu satış tahmini için geçmiş yıllara dayalı ortalama büyüme oranını hesaplayın.",
+    "hint": "Yıllık satışları karşılaştırıp büyüme oranını hesaplayın.",
+    "sql": "WITH YearlySales AS ( SELECT YEAR(o.ORDER_DATE) AS OrderYear, SUM(od.UNIT_PRICE * od.QUANTITY * (1 - od.DISCOUNT)) AS AnnualSales FROM Orders o JOIN [Order Details] od ON o.ORDER_ID = od.ORDER_ID GROUP BY YEAR(o.ORDER_DATE) ), GrowthRates AS ( SELECT OrderYear, AnnualSales, LAG(AnnualSales) OVER (ORDER BY OrderYear) AS PrevYearSales, (AnnualSales - LAG(AnnualSales) OVER (ORDER BY OrderYear)) * 100.0 / LAG(AnnualSales) OVER (ORDER BY OrderYear) AS GrowthRate FROM YearlySales ) SELECT AVG(GrowthRate) AS AvgGrowthRate, MAX(OrderYear) AS LastYear, (SELECT AnnualSales FROM YearlySales WHERE OrderYear = (SELECT MAX(OrderYear) FROM YearlySales)) AS LastYearSales, (SELECT AnnualSales FROM YearlySales WHERE OrderYear = (SELECT MAX(OrderYear) FROM YearlySales)) * (1 + AVG(GrowthRate)/100) AS ProjectedSales FROM GrowthRates WHERE GrowthRate IS NOT NULL"
+  },
+  {
+    "title": "98. En fazla iade (negatif indirim) yapılan ürünleri ve oranlarını gösterin.",
+    "hint": "Discount < 0 koşulu ile iade işlemlerini bulun.",
+    "sql": "SELECT p.PRODUCT_NAME, SUM(CASE WHEN od.DISCOUNT < 0 THEN 1 ELSE 0 END) AS ReturnCount, COUNT(*) AS TotalOrders, SUM(CASE WHEN od.DISCOUNT < 0 THEN 1 ELSE 0 END) * 100.0 / COUNT(*) AS ReturnRate FROM Products p JOIN [Order Details] od ON p.PRODUCT_ID = od.PRODUCT_ID GROUP BY p.PRODUCT_ID, p.PRODUCT_NAME HAVING SUM(CASE WHEN od.DISCOUNT < 0 THEN 1 ELSE 0 END) > 0 ORDER BY ReturnRate DESC"
+  },
+  {
+    "title": "99. Aynı şehirdeki müşterilerden yapılan toplam ciroyu bulun.",
+    "hint": "GROUP BY City, SUM(sipariş tutarı) hesaplayın.",
+    "sql": "SELECT City, COUNT(DISTINCT c.CUSTOMER_ID) AS CustomerCount, SUM(od.UNIT_PRICE * od.QUANTITY * (1 - od.DISCOUNT)) AS TotalRevenue FROM Customers c JOIN Orders o ON c.CUSTOMER_ID = o.CUSTOMER_ID JOIN [Order Details] od ON o.ORDER_ID = od.ORDER_ID GROUP BY City ORDER BY TotalRevenue DESC"
+  },
+  {
+    "title": "100. İlk siparişinden sonra 1 yıl içinde tekrar sipariş vermeyen müşterileri bulun.",
+    "hint": "MIN(OrderDate) ile ilk sipariş tarihini bulun, 1 yıl sonrasını kontrol edin.",
+    "sql": "WITH CustomerFirstOrder AS ( SELECT CUSTOMER_ID, MIN(ORDER_DATE) AS FirstOrderDate FROM Orders GROUP BY CUSTOMER_ID ), CustomerSecondOrder AS ( SELECT o.CUSTOMER_ID, MIN(o.ORDER_DATE) AS SecondOrderDate FROM Orders o JOIN CustomerFirstOrder cfo ON o.CUSTOMER_ID = cfo.CUSTOMER_ID WHERE o.ORDER_DATE > cfo.FirstOrderDate GROUP BY o.CUSTOMER_ID ) SELECT c.COMPANY_NAME, cfo.FirstOrderDate FROM Customers c JOIN CustomerFirstOrder cfo ON c.CUSTOMER_ID = cfo.CUSTOMER_ID LEFT JOIN CustomerSecondOrder cso ON c.CUSTOMER_ID = cso.CUSTOMER_ID WHERE cso.SecondOrderDate IS NULL OR cso.SecondOrderDate > DATEADD(year, 1, cfo.FirstOrderDate)"
+  }
+]
