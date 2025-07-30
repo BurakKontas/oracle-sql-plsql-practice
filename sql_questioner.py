@@ -7,7 +7,7 @@ from PIL import Image, ImageTk
 class SQLQuizApp:
     def __init__(self, root):
         self.root = root
-        self.root.title("SQL Soru Çözme Uygulaması")
+        self.root.title("SQL Quiz Application")
         self.root.geometry("1200x1000")
 
         # Database connection defaults
