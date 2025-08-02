@@ -149,8 +149,12 @@ class SQLQuizApp:
         self.hint_btn.pack()
         self.hint_label = tk.Label(self.hint_frame, text="", font=("Arial", 12), fg="blue", wraplength=1000, justify="left")
 
-        self.sql_text = tk.Text(self.root, width=100, height=8, font=("Consolas", 12))
+        self.sql_text = tk.Text(self.root, width=100, height=8, font=("Consolas", 12), undo=True)
         self.sql_text.pack(pady=10)
+
+        self.sql_text.bind("<Control-z>", lambda e: self.sql_text.edit_undo())
+        self.sql_text.bind("<Control-y>", lambda e: self.sql_text.edit_redo())
+        self.sql_text.bind("<Control-Return>", lambda e: self.check_answer())
 
         btn_frame = tk.Frame(self.root)
         btn_frame.pack(pady=10)
@@ -311,6 +315,7 @@ class SQLQuizApp:
             self.status_label.config(text="Congratulations! Correct answer.", fg="green")
         else:
             self.status_label.config(text="Wrong answer, please try again.", fg="red")
+
 
 if __name__ == "__main__":
     root = tk.Tk()
