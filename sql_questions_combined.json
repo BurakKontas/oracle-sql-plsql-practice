@@ -51,7 +51,7 @@
   },
   {
     "title": "11. Calculate the average order revenue for each year.",
-    "hint": "Use YEAR(ORDER_DATE) function, take average with AVG.",
+    "hint": "Use EXTRACT(YEAR FROM ORDER_DATE) function, take average with AVG.",
     "sql": "SELECT TO_CHAR(o.ORDER_DATE, 'YYYY') AS OrderYear, AVG(od.UNIT_PRICE * od.QUANTITY * (1 - od.DISCOUNT)) AS AvgOrderRevenue FROM ORDERS o JOIN ORDER_DETAILS od ON o.ORDER_ID = od.ORDER_ID GROUP BY TO_CHAR(o.ORDER_DATE, 'YYYY')"
   },
   {
@@ -96,7 +96,7 @@
   },
   {
     "title": "20. Find the total annual sales amount per employee.",
-    "hint": "JOIN Orders and Order Details, group by YEAR(ORDER_DATE).",
+    "hint": "JOIN Orders and Order Details, group by EXTRACT(YEAR FROM ORDER_DATE).",
     "sql": "SELECT e.FIRSTNAME || ' ' || e.LASTNAME AS EmployeeName, EXTRACT(YEAR FROM o.ORDER_DATE) AS OrderYear, SUM(od.UNIT_PRICE * od.QUANTITY * (1 - od.DISCOUNT)) AS TotalSales FROM Employees e JOIN Orders o ON e.EMPLOYEE_ID = o.EMPLOYEE_ID JOIN ORDER_DETAILS od ON o.ORDER_ID = od.ORDER_ID GROUP BY e.EMPLOYEE_ID, e.FIRSTNAME, e.LASTNAME, EXTRACT(YEAR FROM o.ORDER_DATE)"
   },
   {
@@ -111,7 +111,7 @@
   },
   {
     "title": "23. Find the top 3 best-selling products in 1996.",
-    "hint": "JOIN Products and Order Details, filter by YEAR(ORDER_DATE) = 1996, use SUM(QUANTITY).",
+    "hint": "JOIN Products and Order Details, filter by EXTRACT(YEAR FROM ORDER_DATE) = 1996, use SUM(QUANTITY).",
     "sql": "SELECT p.PRODUCT_NAME, SUM(od.QUANTITY) AS TotalSold FROM Products p JOIN ORDER_DETAILS od ON p.PRODUCT_ID = od.PRODUCT_ID JOIN Orders o ON od.ORDER_ID = o.ORDER_ID WHERE EXTRACT(YEAR FROM o.ORDER_DATE) = 1996 GROUP BY p.PRODUCT_ID, p.PRODUCT_NAME ORDER BY SUM(od.QUANTITY) DESC FETCH FIRST 3 ROWS ONLY"
   },
   {
@@ -206,7 +206,7 @@
   },
   {
     "title": "42. Calculate average shipping days by year.",
-    "hint": "Use DATEDIFF for shipping time, group by YEAR(ORDER_DATE).",
+    "hint": "Use DATEDIFF for shipping time, group by EXTRACT(YEAR FROM ORDER_DATE).",
     "sql": "SELECT EXTRACT(YEAR FROM ORDER_DATE) AS OrderYear, AVG(SHIPPED_DATE - ORDER_DATE) AS AvgShippingDays FROM Orders WHERE SHIPPED_DATE IS NOT NULL GROUP BY EXTRACT(YEAR FROM ORDER_DATE)"
   },
   {
@@ -236,7 +236,7 @@
   },
   {
     "title": "48. Show monthly order counts for years 1996-1998.",
-    "hint": "Use YEAR() and MONTH() functions, group by both, filter by year range.",
+    "hint": "Use EXTRACT(YEAR FROM xx) and EXTRACT(MONTH FROM xx) functions, group by both, filter by year range.",
     "sql": "SELECT EXTRACT(YEAR FROM ORDER_DATE) AS OrderYear, EXTRACT(MONTH FROM ORDER_DATE) AS OrderMonth, COUNT(*) AS OrderCount FROM Orders WHERE EXTRACT(YEAR FROM ORDER_DATE) BETWEEN 1996 AND 1998 GROUP BY EXTRACT(YEAR FROM ORDER_DATE), EXTRACT(MONTH FROM ORDER_DATE) ORDER BY OrderYear, OrderMonth"
   },
   {
