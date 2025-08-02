@@ -16,7 +16,7 @@
   },
   {
     "title": "4. Find the order with the most products.",
-    "hint": "Use SUM(Quantity) in Order Details, sort with ORDER BY DESC and take LIMIT 1.",
+    "hint": "Use SUM(Quantity) in Order Details, sort with ORDER BY DESC and take FETCH FIRST 1 ROW ONLY.",
     "sql": "SELECT ORDER_ID, SUM(QUANTITY) AS TotalQuantity FROM ORDER_DETAILS GROUP BY ORDER_ID ORDER BY SUM(QUANTITY) DESC FETCH FIRST 1 ROW ONLY"
   },
   {
@@ -106,7 +106,7 @@
   },
   {
     "title": "22. Calculate the average price and price variance for each category.",
-    "hint": "JOIN Categories and Products, use AVG() and VAR() functions.",
+    "hint": "JOIN Categories and Products, use AVG() and VAR_SAMP() functions.",
     "sql": "SELECT c.CATEGORY_NAME, AVG(p.UNIT_PRICE) AS AvgPrice, VARIANCE(p.UNIT_PRICE) AS PriceVariance FROM Categories c JOIN Products p ON c.CATEGORY_ID = p.CATEGORY_ID GROUP BY c.CATEGORY_ID, c.CATEGORY_NAME"
   },
   {
