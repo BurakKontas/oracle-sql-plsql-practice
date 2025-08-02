@@ -121,7 +121,7 @@
   },
   {
     "title": "25. Find the order with the longest shipping time.",
-    "hint": "Use DATEDIFF(day, ORDER_DATE, SHIPPED_DATE), filter WHERE SHIPPED_DATE IS NOT NULL.",
+    "hint": "Use (SHIPPED_DATE - ORDER_DATE), filter WHERE SHIPPED_DATE IS NOT NULL.",
     "sql": "SELECT ORDER_ID, ORDER_DATE, SHIPPED_DATE, (SHIPPED_DATE - ORDER_DATE) AS DaysDifference FROM Orders WHERE SHIPPED_DATE IS NOT NULL ORDER BY (SHIPPED_DATE - ORDER_DATE) DESC FETCH FIRST 1 ROW ONLY"
   },
   {
@@ -206,7 +206,7 @@
   },
   {
     "title": "42. Calculate average shipping days by year.",
-    "hint": "Use DATEDIFF for shipping time, group by EXTRACT(YEAR FROM ORDER_DATE).",
+    "hint": "Use (SHIPPED_DATE - ORDER_DATE) for shipping time, group by EXTRACT(YEAR FROM ORDER_DATE).",
     "sql": "SELECT EXTRACT(YEAR FROM ORDER_DATE) AS OrderYear, AVG(SHIPPED_DATE - ORDER_DATE) AS AvgShippingDays FROM Orders WHERE SHIPPED_DATE IS NOT NULL GROUP BY EXTRACT(YEAR FROM ORDER_DATE)"
   },
   {
@@ -246,7 +246,7 @@
   },
   {
     "title": "50. Calculate the average order processing time (shipment - order) in days per employee.",
-    "hint": "Use AVG(DATEDIFF(ShippedDate, OrderDate))",
+    "hint": "Use AVG((SHIPPED_DATE - ORDER_DATE))",
     "sql": "SELECT e.FIRSTNAME || ' ' || e.LASTNAME AS EmployeeName, AVG(o.SHIPPED_DATE - o.ORDER_DATE) AS AvgShippingDays FROM Employees e JOIN Orders o ON e.EMPLOYEE_ID = o.EMPLOYEE_ID WHERE o.SHIPPED_DATE IS NOT NULL GROUP BY e.EMPLOYEE_ID, e.FIRSTNAME, e.LASTNAME"
   },
   {
@@ -266,7 +266,7 @@
   },
   {
     "title": "54. Compare employees' average shipping time performance.",
-    "hint": "AVG(DATEDIFF) for each employee with ranking",
+    "hint": "AVG((SHIPPED_DATE - ORDER_DATE)) for each employee with ranking",
     "sql": "SELECT e.FIRSTNAME || ' ' || e.LASTNAME AS EmployeeName, AVG(o.SHIPPED_DATE - o.ORDER_DATE) AS AvgShippingDays, RANK() OVER (ORDER BY AVG(o.SHIPPED_DATE - o.ORDER_DATE)) AS PerformanceRank FROM Employees e JOIN Orders o ON e.EMPLOYEE_ID = o.EMPLOYEE_ID WHERE o.SHIPPED_DATE IS NOT NULL GROUP BY e.EMPLOYEE_ID, e.FIRSTNAME, e.LASTNAME"
   },
   {
@@ -366,7 +366,7 @@
   },
   {
     "title": "74. List the fastest shipped orders in the last year.",
-    "hint": "Find smallest DATEDIFF(ShippedDate, OrderDate)",
+    "hint": "Find smallest (SHIPPED_DATE - ORDER_DATE)",
     "sql": "SELECT ORDER_ID, ORDER_DATE, SHIPPED_DATE, (SHIPPED_DATE - ORDER_DATE) AS ShippingDays FROM Orders WHERE ORDER_DATE >= ADD_MONTHS(SYSDATE, -12) AND SHIPPED_DATE IS NOT NULL ORDER BY (SHIPPED_DATE - ORDER_DATE) FETCH FIRST 10 ROWS ONLY"
   },
   {
@@ -441,7 +441,7 @@
   },
   {
     "title": "89. Comparative analysis of order delivery times across countries.",
-    "hint": "Calculate AVG(DATEDIFF) by Country",
+    "hint": "Calculate AVG((SHIPPED_DATE - ORDER_DATE)) by Country",
     "sql": "SELECT c.Country, COUNT(o.ORDER_ID) AS TotalOrders, AVG(o.SHIPPED_DATE - o.ORDER_DATE) AS AvgShippingDays, MIN(o.SHIPPED_DATE - o.ORDER_DATE) AS MinShippingDays, MAX(o.SHIPPED_DATE - o.ORDER_DATE) AS MaxShippingDays FROM Customers c JOIN Orders o ON c.CUSTOMER_ID = o.CUSTOMER_ID WHERE o.SHIPPED_DATE IS NOT NULL GROUP BY c.Country ORDER BY AvgShippingDays"
   },
   {
