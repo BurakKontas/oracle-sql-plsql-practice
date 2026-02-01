@@ -1,0 +1,18 @@
+services:
+  oracle-db:
+    image: container-registry.oracle.com/database/express:latest
+    container_name: oracle-db
+    ports:
+      - "1521:1521"
+    environment:
+      ORACLE_PWD: testpassword
+    volumes:
+      - oracle-data:/opt/oracle/oradata
+      - ./Northwind.create.sql:/tmp/Northwind.create.sql:ro
+    healthcheck:
+      test: ["CMD", "bash", "-c", "echo 'select 1 from dual;' | sqlplus -s system/testpassword@XEPDB1"]
+      interval: 20s
+      timeout: 10s
+      retries: 20
+volumes:
+  oracle-data:
