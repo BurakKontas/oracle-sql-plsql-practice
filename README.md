@@ -44,8 +44,8 @@ docker compose exec -it oracle-db sqlplus system/testpassword@XEPDB1 @/tmp/North
 Configuration (./db_config.json):
 ```json
 {
-    "username": "system",
-    "password": "testpassword",
+    "username": "NORTHWIND",
+    "password": "NORTHWIND",
     "dsn": "localhost:1521/XEPDB1"
 }
 ```
