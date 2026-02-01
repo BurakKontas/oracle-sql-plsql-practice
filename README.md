@@ -35,6 +35,22 @@ cd sql-practice
 pip install oracledb Pillow
 ```
 
+2.1 Install OracleDB on Docker (Optional):
+```bash
+docker compose up -d
+docker compose exec -it oracle-db sqlplus system/testpassword@XEPDB1 @/tmp/Northwind.create.sql
+```
+
+Configuration (./db_config.json):
+```json
+{
+    "username": "system",
+    "password": "testpassword",
+    "dsn": "localhost:1521/XEPDB1"
+}
+```
+
+
 3. Set up the Northwind database:
    - Run the `Northwind.create.sql` script in your Oracle database
    - Note your database connection details (username, password, DSN)
